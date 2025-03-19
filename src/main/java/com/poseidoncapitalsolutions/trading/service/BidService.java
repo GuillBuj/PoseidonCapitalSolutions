@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.poseidoncapitalsolutions.trading.dto.BidAddDTO;
 import com.poseidoncapitalsolutions.trading.dto.BidUpdateDTO;
 import com.poseidoncapitalsolutions.trading.dto.display.BidListItemDTO;
-import com.poseidoncapitalsolutions.trading.exception.ItemNotFoundException;
+import com.poseidoncapitalsolutions.trading.exception.BidNotFoundException;
 import com.poseidoncapitalsolutions.trading.model.Bid;
 import com.poseidoncapitalsolutions.trading.repository.BidRepository;
 
@@ -45,7 +45,7 @@ public class BidService {
         log.debug("Updating bid from DTO: {}", bidUpdateDTO);
 
         Bid updatedBid = bidRepository.findById(bidUpdateDTO.id())
-            .orElseThrow(() -> new ItemNotFoundException("Bid not found with ID: " + bidUpdateDTO.id()));
+            .orElseThrow(() -> new BidNotFoundException("Bid not found with ID: " + bidUpdateDTO.id()));
         
         updatedBid.setAccount(bidUpdateDTO.account());
         updatedBid.setType(bidUpdateDTO.type());
@@ -55,22 +55,19 @@ public class BidService {
         return bidRepository.save(updatedBid);
     }
 
-    public boolean deleteById(int id){
+    public void deleteById(int id) {
         log.debug("Deleting bid with id: {}", id);
-
-        if(bidRepository.existsById(id)){
-            bidRepository.deleteById(id);
-            log.info("Bid deleted with id: {}", id);
-            return true;
-        }
-        
-        log.info("Bid NOT deleted with id: {}", id);
-        return false;    
+    
+        Bid bidToDelete = bidRepository.findById(id)
+            .orElseThrow(() -> new BidNotFoundException("Bid not found with ID: " + id));
+    
+        bidRepository.delete(bidToDelete);
+        log.info("Bid successfully deleted with id: {}", id);
     }
 
     public BidUpdateDTO getBidUpdateDTO(int id){
         Bid bid = bidRepository.findById(id)
-            .orElseThrow(() -> new ItemNotFoundException("Bid not found with ID: " + id));
+            .orElseThrow(() -> new BidNotFoundException("Bid not found with ID: " + id));
 
         return new BidUpdateDTO(bid.getId(), bid.getAccount(), bid.getType(), bid.getBidQuantity());
     }

@@ -1,5 +1,7 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,9 +30,10 @@ public class BidController {
     
     
     @GetMapping("/bid/list")
-    public String home(Model model) {
+    public String home(Model model, Principal principal) {
         log.debug("GET - /bid/list");
 
+        model.addAttribute("username", principal.getName());
         model.addAttribute("bids", bidService.getAllBids());
         
         return "bid/list";
