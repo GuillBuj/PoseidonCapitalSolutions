@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.poseidoncapitalsolutions.dto.UserCreateDTO;
-import com.poseidoncapitalsolutions.dto.UserUpdateDTO;
+import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
+import com.poseidoncapitalsolutions.trading.dto.UserUpdateDTO;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
 
