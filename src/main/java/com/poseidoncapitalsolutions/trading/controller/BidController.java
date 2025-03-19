@@ -6,9 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.poseidoncapitalsolutions.trading.dto.BidAddDTO;
+import com.poseidoncapitalsolutions.trading.dto.BidUpdateDTO;
 import com.poseidoncapitalsolutions.trading.model.Bid;
 import com.poseidoncapitalsolutions.trading.service.BidService;
 
@@ -28,7 +30,7 @@ public class BidController {
     @GetMapping("/bid/list")
     public String home(Model model) {
         log.debug("GET - /bid/list");
-        // TODO: call service find all bids to show to the view
+
         model.addAttribute("bids", bidService.getAllBids());
         
         return "bid/list";
@@ -40,6 +42,7 @@ public class BidController {
         log.debug("GET - /bid/add");
 
         model.addAttribute("bidDTO", new BidAddDTO(null, null, 0));
+        
         return "bid/add";
     }
 
@@ -54,27 +57,46 @@ public class BidController {
         }
 
         Bid newBid=bidService.createBid(bidDTO);
-        log.info("Bid created successfully with ID[{}]", newBid.getId());
+        log.info("Bid successfully created with ID[{}]", newBid.getId());
 
-        return "bid/list";
+        return "redirect:/bid/list";
     }
 
-    // @GetMapping("/bid/update/{id}")
-    // public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-    //     // TODO: get Bid by Id and to model then show to the form
-    //     return "bid/update";
-    // }
+    @GetMapping("/bid/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        log.debug("GET - /bid/update/{}", id);
 
-    // @PostMapping("/bid/update/{id}")
-    // public String updateBid(@PathVariable("id") Integer id, @Valid Bid bid,
-    //                          BindingResult result, Model model) {
-    //     // TODO: check required fields, if valid call service to update Bid and return list Bid
-    //     return "redirect:/bid/list";
-    // }
+        model.addAttribute("bidDTO", bidService.getBidUpdateDTO(id));
+        
+        return "bid/update";
+    }
 
-    // @GetMapping("/bid/delete/{id}")
-    // public String deleteBid(@PathVariable("id") Integer id, Model model) {
-    //     // TODO: Find Bid by Id and delete the bid, return to Bid list
-    //     return "redirect:/bid/list";
-    // }
+    @PostMapping("/bid/update/{id}")
+    public String updateBid(@PathVariable("id") Integer id,
+                            @Valid @ModelAttribute("bidDTO") BidUpdateDTO bidDTO,
+                            BindingResult result,
+                            Model model) {
+        log.info("POST - /bid/update/{} : {}", id, bidDTO);                        
+        
+        if (result.hasErrors()) {
+            log.warn("Validation error");
+            model.addAttribute("bidDTO", bidDTO);
+            return "bid/add";
+        }
+
+        Bid updatedBid=bidService.updateBid(bidDTO);
+        log.info("Bid successfully updated with ID[{}]", updatedBid.getId());
+
+        return "redirect:/bid/list";
+    }
+
+    //TODO: voir si je dois laisser en GET
+    @GetMapping("/bid/delete/{id}")
+    public String deleteBid(@PathVariable("id") Integer id, Model model) {
+        log.info("GET - /bid/delete/{}", id);
+
+        bidService.deleteById(id);
+
+        return "redirect:/bid/list";
+    }
 }

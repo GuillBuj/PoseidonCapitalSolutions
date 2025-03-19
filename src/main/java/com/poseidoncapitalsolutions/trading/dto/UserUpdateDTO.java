@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public record UserUpdateDTO(
     
-    @NotNull(message = "L'ID est obligatoire")
+    @NotNull
     int id,
 
     @NotBlank(message = "Username is mandatory")
