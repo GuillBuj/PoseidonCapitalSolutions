@@ -7,10 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.poseidoncapitalsolutions.dto.UserCreateDTO;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
 
@@ -32,22 +34,30 @@ public class UserController {
     }
 
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(Model model) {
+        model.addAttribute("userDTO", new UserCreateDTO("", "", "", "USER"));
+        
         return "user/add";
     }
 
     @PostMapping("/user/validate")
-    public String validate(@Valid User user, BindingResult result, Model model) {
+    public String validate(@Valid @ModelAttribute("userDTO") UserCreateDTO userDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("userDTO", userDTO);
             return "user/add";
         }
 
+        User newUser = new User();
+        newUser.setUsername(userDTO.username());
+        newUser.setFullname(userDTO.fullname());
+        newUser.setRole(userDTO.role());
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getRawPassword()));
-        log.info("Raw Password: " + user.getRawPassword());
-        userRepository.save(user);
-        log.info("Raw Password: " + user.getRawPassword());
+        newUser.setPassword(encoder.encode(userDTO.rawPassword()));
+
+        userRepository.save(newUser);
         model.addAttribute("users", userRepository.findAll());
+
         return "redirect:/user/list";
     }
 
