@@ -26,4 +26,15 @@ public record UserUpdateDTO(
 
     @NotBlank(message = "Role is mandatory")
     String role
-) {}
+) {
+    @Override
+    public String toString() {
+        return "UserUpdateDTO[" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", rawPassword='*****'" +
+                ", fullname='" + fullname + '\'' +
+                ", role='" + role + '\'' +
+                ']';
+    }
+}

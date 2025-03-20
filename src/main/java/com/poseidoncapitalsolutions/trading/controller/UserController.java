@@ -1,7 +1,6 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
 import com.poseidoncapitalsolutions.trading.dto.UserUpdateDTO;
-import com.poseidoncapitalsolutions.trading.model.User;
-import com.poseidoncapitalsolutions.trading.repository.UserRepository;
+import com.poseidoncapitalsolutions.trading.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +20,23 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class UserController {
+    
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @RequestMapping("/user/list")
     public String home(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        log.debug("GET - /user/list");
+        
+        model.addAttribute("users", userService.getAllUsers());
+        
         return "user/list";
     }
 
     @GetMapping("/user/add")
     public String addUser(Model model) {
+        log.debug("GET - /user/add");
+        
         model.addAttribute("userDTO", new UserCreateDTO("", "", "", "USER"));
 
         return "user/add";
@@ -40,63 +44,47 @@ public class UserController {
 
     @PostMapping("/user/validate")
     public String validate(@Valid @ModelAttribute("userDTO") UserCreateDTO userDTO, BindingResult result, Model model) {
+        log.info("POST - /user/validate : {}", userDTO);
+        
         if (result.hasErrors()) {
             model.addAttribute("userDTO", userDTO);
             return "user/add";
         }
 
-        User newUser = new User();
-        newUser.setUsername(userDTO.username());
-        newUser.setFullname(userDTO.fullname());
-        newUser.setRole(userDTO.role());
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        newUser.setPassword(encoder.encode(userDTO.rawPassword()));
-
-        userRepository.save(newUser);
+        userService.createUser(userDTO);
 
         return "redirect:/user/list";
     }
 
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        log.debug("GET - /user/update/{}", id);
+        
+        model.addAttribute("userDTO", userService.getUserUpdateDTO(id));
 
-        model.addAttribute("userDTO",
-                new UserUpdateDTO(user.getId(), user.getUsername(), "", user.getFullname(), user.getRole()));
         return "user/update";
     }
 
     @PostMapping("/user/update")
     public String updateUser(@Valid @ModelAttribute("userDTO") UserUpdateDTO userDTO, BindingResult result, Model model) {
+        log.info("POST - /user/update : {}", userDTO);
+
         if (result.hasErrors()) {
             model.addAttribute("userDTO", userDTO);
             return "user/update";
         }
 
-        User user = userRepository.findById(userDTO.id())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setUsername(userDTO.username());
-        user.setFullname(userDTO.fullname());
-        user.setRole(userDTO.role());
-
-        // todo: voir si ça convient
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(userDTO.rawPassword()));
-
-        userRepository.save(user);
+        userService.updateUser(userDTO);
 
         return "redirect:/user/list";
     }
 
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        userRepository.delete(user);
-        model.addAttribute("users", userRepository.findAll());
+        log.info("GET - /user/delete/{}", id);
+        
+        userService.deleteById(id);
+
         return "redirect:/user/list";
     }
 }

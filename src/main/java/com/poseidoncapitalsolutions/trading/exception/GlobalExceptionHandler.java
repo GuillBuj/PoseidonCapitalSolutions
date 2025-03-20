@@ -10,8 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(BidNotFoundException.class)
-    public String handleItemNotFoundException(BidNotFoundException e, RedirectAttributes redirectAttributes) {
+    public String handleBidNotFoundException(BidNotFoundException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/bid/list";
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public String handleUserNotFoundException(UserNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/user/list";
     }
 }
