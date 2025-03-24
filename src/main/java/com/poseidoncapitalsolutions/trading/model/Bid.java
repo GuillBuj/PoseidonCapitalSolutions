@@ -20,14 +20,14 @@ public class Bid {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String account;
     private String type;
-    private Double bidQuantity;
-    private Double askQuantity;
-    private Double bid;
-    private Double ask;
+    private double bidQuantity;
+    private double askQuantity;
+    private double bid;
+    private double ask;
     private String benchmark;
     private Timestamp bidListDate;
     private String commentary;

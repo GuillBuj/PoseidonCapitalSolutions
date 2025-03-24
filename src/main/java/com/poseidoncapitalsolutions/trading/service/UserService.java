@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
@@ -13,14 +14,18 @@ import com.poseidoncapitalsolutions.trading.exception.UserNotFoundException;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@AllArgsConstructor
 @Slf4j
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+   // private final PasswordEncoder passwordEncoder;
 
     public List<UserListItemDTO> getAllUsers(){
         return userRepository.findAll().stream()
@@ -36,8 +41,8 @@ public class UserService {
         newUser.setFullname(userCreateDTO.fullname());
         newUser.setRole(userCreateDTO.role());
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        newUser.setPassword(encoder.encode(userCreateDTO.rawPassword()));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
 
         User savedUser = userRepository.save(newUser);
         log.info("User successfully created with ID[{}]", savedUser.getId());
@@ -56,8 +61,8 @@ public class UserService {
         user.setRole(userUpdateDTO.role());
 
         // todo: voir si ça convient
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(userUpdateDTO.rawPassword()));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(userUpdateDTO.rawPassword()));
 
         User updatedUser = userRepository.save(user);
         log.info("User successfully updated with ID[{}]", updatedUser.getId());
