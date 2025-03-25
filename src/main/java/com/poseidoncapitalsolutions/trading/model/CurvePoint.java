@@ -1,7 +1,8 @@
 package com.poseidoncapitalsolutions.trading.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +23,12 @@ public class CurvePoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "curveId")
     private int curveId;
+    @Column(name = "asOfDate")
     private Timestamp asOfDate;
     private double term;
     private double value;
+    @Column(name = "creationDate")
     private Timestamp creationDate;
 }

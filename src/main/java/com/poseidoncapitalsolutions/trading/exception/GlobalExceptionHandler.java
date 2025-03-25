@@ -20,4 +20,10 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/user/list";
     }
+
+    @ExceptionHandler(CurvePointNotFoundException.class)
+    public String handleCurvePointNotFoundException(CurvePointNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/user/list";
+    }
 }

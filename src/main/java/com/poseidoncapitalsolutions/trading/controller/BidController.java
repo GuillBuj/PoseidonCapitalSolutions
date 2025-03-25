@@ -30,10 +30,9 @@ public class BidController {
     
     
     @GetMapping("/bid/list")
-    public String home(Model model, Principal principal) {
+    public String home(Model model) {
         log.debug("GET - /bid/list");
 
-        model.addAttribute("username", principal.getName());
         model.addAttribute("bids", bidService.getAllBids());
         
         return "bid/list";
@@ -44,7 +43,7 @@ public class BidController {
     public String addBidForm(Model model) {
         log.debug("GET - /bid/add");
 
-        model.addAttribute("bidDTO", new BidAddDTO(null, null, 0));
+        model.addAttribute("bidDTO", new BidAddDTO(null, null, null));
         
         return "bid/add";
     }

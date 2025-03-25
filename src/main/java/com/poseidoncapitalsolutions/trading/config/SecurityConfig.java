@@ -27,13 +27,13 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        String generatedPassword = UUID.randomUUID().toString(); // Générer un mot de passe aléatoire
+        String generatedPassword = UUID.randomUUID().toString();
 
-        log.warn("Using generated security password: {}", generatedPassword);
+        log.warn("********* Using generated security password: {} *********", generatedPassword);
 
         return new InMemoryUserDetailsManager(
             User.withUsername("user")
-                .password(passwordEncoder().encode(generatedPassword)) // Stocker le mot de passe généré
+                .password(passwordEncoder().encode(generatedPassword))
                 .roles("USER")
                 .build()
         );

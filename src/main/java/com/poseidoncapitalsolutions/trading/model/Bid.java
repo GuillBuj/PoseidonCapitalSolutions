@@ -24,10 +24,10 @@ public class Bid {
 
     private String account;
     private String type;
-    private double bidQuantity;
-    private double askQuantity;
-    private double bid;
-    private double ask;
+    private Double bidQuantity;
+    private Double askQuantity;
+    private Double bid;
+    private Double ask;
     private String benchmark;
     private Timestamp bidListDate;
     private String commentary;
