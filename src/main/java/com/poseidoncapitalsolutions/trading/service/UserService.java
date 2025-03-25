@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
 import com.poseidoncapitalsolutions.trading.dto.UserUpdateDTO;
 import com.poseidoncapitalsolutions.trading.dto.display.UserListItemDTO;
+import com.poseidoncapitalsolutions.trading.exception.CurvePointNotFoundException;
 import com.poseidoncapitalsolutions.trading.exception.UserNotFoundException;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
@@ -73,10 +74,11 @@ public class UserService {
     public void deleteById(int id) {
         log.debug("Deleting user with id: {}", id);
     
-        User userToDelete = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+        if(!userRepository.existsById(id)){
+            throw new UserNotFoundException("User not found with ID: " + id);
+        }
     
-        userRepository.delete(userToDelete);
+        userRepository.deleteById(id);
         log.info("User successfully deleted with id: {}", id);
     }
 
@@ -88,4 +90,5 @@ public class UserService {
 
         return new UserUpdateDTO(user.getId(), user.getUsername(), "", user.getFullname(), user.getRole());
     }
+
 }

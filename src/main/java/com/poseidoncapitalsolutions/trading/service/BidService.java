@@ -58,10 +58,11 @@ public class BidService {
     public void deleteById(int id) {
         log.debug("Deleting bid with id: {}", id);
     
-        Bid bidToDelete = bidRepository.findById(id)
-            .orElseThrow(() -> new BidNotFoundException("Bid not found with ID: " + id));
-    
-        bidRepository.delete(bidToDelete);
+        if(!bidRepository.existsById(id)){
+            throw  new BidNotFoundException("Bid not found with ID: " + id);
+        }
+       
+        bidRepository.deleteById(id);
         log.info("Bid successfully deleted with id: {}", id);
     }
 
