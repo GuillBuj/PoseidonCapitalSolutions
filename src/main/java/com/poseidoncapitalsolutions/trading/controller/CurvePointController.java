@@ -12,11 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.poseidoncapitalsolutions.trading.dto.BidAddDTO;
 import com.poseidoncapitalsolutions.trading.dto.CurvePointAddDTO;
 import com.poseidoncapitalsolutions.trading.dto.CurvePointUpdateDTO;
-import com.poseidoncapitalsolutions.trading.dto.display.CurvePointListItemDTO;
-import com.poseidoncapitalsolutions.trading.model.Bid;
 import com.poseidoncapitalsolutions.trading.model.CurvePoint;
 import com.poseidoncapitalsolutions.trading.service.CurvePointService;
 
@@ -40,7 +37,7 @@ public class CurvePointController {
     }
 
     @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid, Model model) {
+    public String addBidForm(Model model) {
         log.debug("GET - /curvePoint/add");
 
         model.addAttribute("curvePointDTO", new CurvePointAddDTO(null, null, null));
@@ -81,8 +78,8 @@ public class CurvePointController {
                 return "curvePoint/add";
         }
 
-        CurvePoint newCurvePoint=curvePointService.updateCurvePoint(curvePointDTO);
-        log.info("CurvePoint successfully updated with ID[{}]", newCurvePoint.getId());
+        CurvePoint updatedCurvePoint=curvePointService.updateCurvePoint(curvePointDTO);
+        log.info("CurvePoint successfully updated with ID[{}]", updatedCurvePoint.getId());
         return "redirect:/curvePoint/list";
     }
 

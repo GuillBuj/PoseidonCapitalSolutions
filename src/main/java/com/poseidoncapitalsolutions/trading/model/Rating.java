@@ -1,7 +1,5 @@
 package com.poseidoncapitalsolutions.trading.model;
 
-import java.sql.Timestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,28 +11,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "curvepoint")
+@Table(name = "rating")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class CurvePoint {
+@NoArgsConstructor
+public class Rating {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
+    @Column(name = "moodysRating")
+    private String moodysRating;
 
-    @Column(name = "curveId")
-    private int curveId;
+    @Column(name = "sandPRating")
+    private String sandPRating;
 
-    @Column(name = "asOfDate")
-    private Timestamp asOfDate;
+    @Column(name = "fitchRating")
+    private String fitchRating;
 
-    @Column(name = "term")
-    private double term;
-
-    @Column(name = "value")
-    private double value;
-
-    @Column(name = "creationDate")
-    private Timestamp creationDate;
+    @Column(name = "orderNumber")
+    private int orderNumber;
 }

@@ -24,6 +24,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CurvePointNotFoundException.class)
     public String handleCurvePointNotFoundException(CurvePointNotFoundException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/user/list";
+        return "redirect:/curvePoint/list";
+    }
+
+    @ExceptionHandler(RatingNotFoundException.class)
+    public String handleRatingNotFoundException(RatingNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/rating/list";
     }
 }
