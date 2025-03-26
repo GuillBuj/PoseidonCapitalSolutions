@@ -95,30 +95,4 @@ public class RuleNameController {
         return "redirect:/ruleName/list";
     }
 
-
-
-    // @PostMapping("/rating/update/{id}")
-    // public String updateRating(@Valid @ModelAttribute("ratingDTO") RatingUpdateDTO ratingDTO, BindingResult result, Model model) {
-    //     log.info("POST - /rating/update/{}", ratingDTO.id());
-
-    //     if(result.hasErrors()){
-    //         log.warn("Validation error");
-    //         model.addAttribute("ratingDTO", ratingDTO);
-    //         return "rating/update";
-    //     }
-
-    //     Rating updatedRating = ratingService.updateRating(ratingDTO);
-    //     log.info("Rating successfully updated with ID[{}]", updatedRating.getId());
-
-    //     return "redirect:/rating/list";
-    // }
-
-    // @GetMapping("/rating/delete/{id}")
-    // public String deleteRating(@PathVariable("id") Integer id, Model model) {
-    //     log.info("GET - /rating/delete/{}", id);
-
-    //     ratingService.deleteById(id);
-
-    //     return "redirect:/rating/list";
-    // }
 }

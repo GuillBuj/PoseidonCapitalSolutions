@@ -15,12 +15,6 @@ public class GlobalExceptionHandler {
         return "redirect:/bid/list";
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public String handleUserNotFoundException(UserNotFoundException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/user/list";
-    }
-
     @ExceptionHandler(CurvePointNotFoundException.class)
     public String handleCurvePointNotFoundException(CurvePointNotFoundException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -37,5 +31,17 @@ public class GlobalExceptionHandler {
     public String handleRuleNameNotFoundException(RuleNameNotFoundException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/ruleName/list";
+    }
+
+    @ExceptionHandler(TradeNotFoundException.class)
+    public String handleTradeNotFoundException(TradeNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/trade/list";
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public String handleUserNotFoundException(UserNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/user/list";
     }
 }
