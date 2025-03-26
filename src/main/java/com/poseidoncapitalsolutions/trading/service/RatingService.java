@@ -54,7 +54,7 @@ public class RatingService {
     
     @Transactional
     public void deleteById(int id){
-        log.debug("Deleting rating point with id: {}", id);
+        log.debug("Deleting rating with id: {}", id);
 
         if(!ratingRepository.existsById(id)){
             throw new RatingNotFoundException("Rating not found with ID: " + id);
@@ -68,7 +68,7 @@ public class RatingService {
     public RatingUpdateDTO getRatingUpdateDTO(int id){
 
         Rating rating = ratingRepository.findById(id)
-            .orElseThrow(()-> new RatingNotFoundException("Rating point not found with ID: " + id));
+            .orElseThrow(()-> new RatingNotFoundException("Rating not found with ID: " + id));
 
         return mapper.toDTO(rating);
     }

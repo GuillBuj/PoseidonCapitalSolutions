@@ -32,4 +32,10 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/rating/list";
     }
+
+    @ExceptionHandler(RuleNameNotFoundException.class)
+    public String handleRuleNameNotFoundException(RuleNameNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/ruleName/list";
+    }
 }
