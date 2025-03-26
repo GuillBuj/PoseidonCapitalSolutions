@@ -2,43 +2,42 @@ package com.poseidoncapitalsolutions.trading.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
 import com.poseidoncapitalsolutions.trading.dto.UserUpdateDTO;
 import com.poseidoncapitalsolutions.trading.dto.display.UserListItemDTO;
 import com.poseidoncapitalsolutions.trading.exception.UserNotFoundException;
+import com.poseidoncapitalsolutions.trading.mapper.UserMapper;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Data  
+@Transactional
 @Slf4j
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
+    private UserMapper mapper;
 
    // private final PasswordEncoder passwordEncoder;
 
     public List<UserListItemDTO> getAllUsers(){
-        return userRepository.findAll().stream()
-                    .map(user -> new UserListItemDTO(user.getId(), user.getFullname(), user.getUsername(), user.getRole()))
-                    .toList();
+        return mapper.toListItemDTOList(userRepository.findAll());
     }
     
     public User createUser(UserCreateDTO userCreateDTO){
         log.debug("Creating user from DTO: {}", userCreateDTO);
 
-        User newUser = new User();
-        newUser.setUsername(userCreateDTO.username());
-        newUser.setFullname(userCreateDTO.fullname());
-        newUser.setRole(userCreateDTO.role());
+        User newUser = mapper.toEntity(userCreateDTO);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
@@ -55,9 +54,7 @@ public class UserService {
         User user = userRepository.findById(userUpdateDTO.id())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        user.setUsername(userUpdateDTO.username());
-        user.setFullname(userUpdateDTO.fullname());
-        user.setRole(userUpdateDTO.role());
+        mapper.updateUserFromDTO(userUpdateDTO, user);
 
         // todo: voir si ça convient
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
