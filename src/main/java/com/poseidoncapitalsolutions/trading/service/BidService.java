@@ -3,39 +3,39 @@ package com.poseidoncapitalsolutions.trading.service;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.poseidoncapitalsolutions.trading.dto.BidAddDTO;
 import com.poseidoncapitalsolutions.trading.dto.BidUpdateDTO;
 import com.poseidoncapitalsolutions.trading.dto.display.BidListItemDTO;
 import com.poseidoncapitalsolutions.trading.exception.BidNotFoundException;
+import com.poseidoncapitalsolutions.trading.mapper.BidMapper;
 import com.poseidoncapitalsolutions.trading.model.Bid;
 import com.poseidoncapitalsolutions.trading.repository.BidRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@AllArgsConstructor
+@Data
+@Transactional
 @Slf4j
 public class BidService {
 
-    @Autowired
-    BidRepository bidRepository;
+    private final BidRepository bidRepository;
+    private final BidMapper mapper;
 
     public List<BidListItemDTO> getAllBids(){
-        return bidRepository.findAll().stream()
-                    .map(bid -> new BidListItemDTO(bid.getId(), bid.getAccount(), bid.getType(), bid.getBidQuantity()))
-                    .toList();
+        return mapper.toListItemDTOList(bidRepository.findAll());
     }
     
     public Bid createBid(BidAddDTO bidAddDTO){
         log.debug("Creating bid from DTO: {}", bidAddDTO);
 
-        Bid newBid = new Bid();
-
-        newBid.setAccount(bidAddDTO.account());
-        newBid.setType(bidAddDTO.type());
-        newBid.setBidQuantity(bidAddDTO.quantity());
+        Bid newBid = mapper.toEntity(bidAddDTO);
         newBid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 
         return bidRepository.save(newBid);
@@ -47,10 +47,7 @@ public class BidService {
         Bid updatedBid = bidRepository.findById(bidUpdateDTO.id())
             .orElseThrow(() -> new BidNotFoundException("Bid not found with ID: " + bidUpdateDTO.id()));
         
-        updatedBid.setAccount(bidUpdateDTO.account());
-        updatedBid.setType(bidUpdateDTO.type());
-        updatedBid.setBidQuantity(bidUpdateDTO.quantity());
-        updatedBid.setRevisionDate(new Timestamp(System.currentTimeMillis()));
+        mapper.updateBidFromDTO(bidUpdateDTO, updatedBid);
         
         return bidRepository.save(updatedBid);
     }

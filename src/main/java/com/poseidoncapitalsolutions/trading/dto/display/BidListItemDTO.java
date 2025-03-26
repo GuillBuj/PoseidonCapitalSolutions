@@ -4,7 +4,7 @@ public record BidListItemDTO(
     int id,
     String account,
     String type,
-    double quantity
+    double bidQuantity
 ) {
 
 }

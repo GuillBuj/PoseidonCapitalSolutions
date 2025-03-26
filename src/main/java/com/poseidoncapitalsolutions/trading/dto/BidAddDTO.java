@@ -11,7 +11,7 @@ public record BidAddDTO(
     String type,
 
     @Positive
-    Double quantity
+    Double bidQuantity
 ) {
 
 }
