@@ -3,6 +3,7 @@ package com.poseidoncapitalsolutions.trading.service;
 import java.util.List;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ public class UserService {
     private UserRepository userRepository;
     private UserMapper mapper;
 
-   // private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserListItemDTO> getAllUsers(){
         return mapper.toListItemDTOList(userRepository.findAll());
@@ -39,7 +40,6 @@ public class UserService {
 
         User newUser = mapper.toEntity(userCreateDTO);
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
 
         User savedUser = userRepository.save(newUser);
@@ -56,10 +56,8 @@ public class UserService {
 
         mapper.updateUserFromDTO(userUpdateDTO, user);
 
-        // todo: voir si ça convient
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(userUpdateDTO.rawPassword()));
-
+        
         User updatedUser = userRepository.save(user);
         log.info("User successfully updated with ID[{}]", updatedUser.getId());
         

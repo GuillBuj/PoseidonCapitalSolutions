@@ -1,13 +1,89 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title> Spring Boot </title>
-    <link rel="stylesheet" href="/css/styles.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .nav-card {
+            transition: all 0.3s ease;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body>
-<h3> HOME PAGE </h3>
-<p>
-    <a href="/login">Login</a> or create one <a href="/user/list">User management</a>
-</p>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold text-primary">Poseidon Capital Solutions</h1>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col">
+                <a href="/bid/list" class="text-decoration-none">
+                    <div class="card nav-card h-100 border-primary">
+                        <div class="card-body text-center py-4">
+                            <h3 class="card-title text-primary">Bid List</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="/curvePoint/list" class="text-decoration-none">
+                    <div class="card nav-card h-100 border-success">
+                        <div class="card-body text-center py-4">
+                            <h3 class="card-title text-success">Curve Points</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="/rating/list" class="text-decoration-none">
+                    <div class="card nav-card h-100 border-info">
+                        <div class="card-body text-center py-4">
+                            <h3 class="card-title text-info">Ratings</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="/trade/list" class="text-decoration-none">
+                    <div class="card nav-card h-100 border-warning">
+                        <div class="card-body text-center py-4">
+                            <h3 class="card-title text-warning">Trades</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="/ruleName/list" class="text-decoration-none">
+                    <div class="card nav-card h-100 border-danger">
+                        <div class="card-body text-center py-4">
+                            <h3 class="card-title text-danger">Rules</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="/user/list" class="text-decoration-none">
+                    <div class="card nav-card h-100 border-dark">
+                        <div class="card-body text-center py-4">
+                            <h3 class="card-title text-dark">User Management</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>  
 </body>
 </html>
