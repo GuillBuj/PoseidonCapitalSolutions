@@ -56,11 +56,10 @@ public class RatingService {
     public void deleteById(int id){
         log.debug("Deleting rating with id: {}", id);
 
-        if(!ratingRepository.existsById(id)){
-            throw new RatingNotFoundException("Rating not found with ID: " + id);
-        }
+        Rating rating = ratingRepository.findById(id)
+            .orElseThrow(()-> new RatingNotFoundException("Rating not found with ID: " + id));
 
-        ratingRepository.deleteById(id);
+        ratingRepository.delete(rating);
         log.info("Rating successfully deleted with id: {}", id);
     }
 

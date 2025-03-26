@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
 import com.poseidoncapitalsolutions.trading.dto.UserUpdateDTO;
 import com.poseidoncapitalsolutions.trading.dto.display.UserListItemDTO;
-import com.poseidoncapitalsolutions.trading.exception.CurvePointNotFoundException;
 import com.poseidoncapitalsolutions.trading.exception.UserNotFoundException;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
@@ -74,11 +72,10 @@ public class UserService {
     public void deleteById(int id) {
         log.debug("Deleting user with id: {}", id);
     
-        if(!userRepository.existsById(id)){
-            throw new UserNotFoundException("User not found with ID: " + id);
-        }
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
     
-        userRepository.deleteById(id);
+        userRepository.delete(user);
         log.info("User successfully deleted with id: {}", id);
     }
 

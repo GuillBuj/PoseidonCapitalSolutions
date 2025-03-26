@@ -59,11 +59,10 @@ public class CurvePointService {
     public void deleteById(int id) {
         log.debug("Deleting curve point with id: {}", id);
     
-        if (!curvePointRepository.existsById(id)) {
-            throw new CurvePointNotFoundException("Curve point not found with ID: " + id);
-        }
+        CurvePoint curvePoint = curvePointRepository.findById(id)
+            .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + id));
         
-        curvePointRepository.deleteById(id);
+        curvePointRepository.delete(curvePoint);
         log.info("Curve point successfully deleted with id: {}", id);
     }
     
