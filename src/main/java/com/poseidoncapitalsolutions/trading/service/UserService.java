@@ -2,7 +2,6 @@ package com.poseidoncapitalsolutions.trading.service;
 
 import java.util.List;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,30 +15,28 @@ import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Data  
 @Transactional
 @Slf4j
 public class UserService {
 
-    private UserRepository userRepository;
-    private UserMapper mapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
 
     public List<UserListItemDTO> getAllUsers(){
-        return mapper.toListItemDTOList(userRepository.findAll());
+        return userMapper.toListItemDTOList(userRepository.findAll());
     }
     
     public User createUser(UserCreateDTO userCreateDTO){
         log.debug("Creating user from DTO: {}", userCreateDTO);
-
-        User newUser = mapper.toEntity(userCreateDTO);
-
+//TODO verifs existe deja
+        User newUser = userMapper.toEntity(userCreateDTO);
+//TODO fonction
         newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
 
         User savedUser = userRepository.save(newUser);
@@ -54,7 +51,7 @@ public class UserService {
         User user = userRepository.findById(userUpdateDTO.id())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        mapper.updateUserFromDTO(userUpdateDTO, user);
+                userMapper.updateUserFromDTO(userUpdateDTO, user);
 
         user.setPassword(passwordEncoder.encode(userUpdateDTO.rawPassword()));
         
