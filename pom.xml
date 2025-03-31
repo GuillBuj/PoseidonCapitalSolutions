@@ -169,6 +169,7 @@
                         <exclude>com/poseidoncapitalsolutions/trading/TradingApplication.class</exclude>
                         <exclude>**/mapper/**</exclude>
                         <exclude>**/repository/**</exclude>
+                        <exclude>**/exception/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -183,6 +184,9 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>target/jacoco-report</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
