@@ -25,7 +25,7 @@ public class TradeService {
     private final TradeRepository tradeRepository;
     private final TradeMapper tradeMapper;
 
-    public List<TradeListItemDTO> getAll(){
+    public List<TradeListItemDTO> getAllTrades(){
         return tradeMapper.toListItemDTOList(tradeRepository.findAll());
     }
     

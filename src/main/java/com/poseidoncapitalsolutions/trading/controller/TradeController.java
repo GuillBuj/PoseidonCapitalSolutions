@@ -30,7 +30,7 @@ public class TradeController {
     public String home(Model model) {
         log.debug("GET - /trade/list");
         
-        model.addAttribute("trades", tradeService.getAll());
+        model.addAttribute("trades", tradeService.getAllTrades());
 
         return "trade/list";
     }

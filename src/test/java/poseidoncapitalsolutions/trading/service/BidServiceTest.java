@@ -6,14 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.security.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +46,7 @@ class BidServiceTest {
     private Bid bid;
     private BidAddDTO bidAddDTO;
     private BidUpdateDTO bidUpdateDTO;
-    private BidListItemDTO bidListItemDTO;
+    private BidListItemDTO expectedBidListItemDTO;
 
     @BeforeEach
     void setUp() {
@@ -62,18 +59,15 @@ class BidServiceTest {
 
     @Test
     void getAllBidsOk() {
-        String account = "Account1";
-        String type = "Type1";
-        Double bidQuantity = 10.00;
-        bidListItemDTO = new BidListItemDTO(1, account, type, bidQuantity);
+        BidListItemDTO expectedBidListItemDTO = new BidListItemDTO(1, "Account1", "Type1", 10.00);
 
         when(bidRepository.findAll()).thenReturn(Arrays.asList(bid));
-        when(bidMapper.toListItemDTOList(anyList())).thenReturn(Arrays.asList(bidListItemDTO));
+        when(bidMapper.toListItemDTOList(anyList())).thenReturn(Arrays.asList(expectedBidListItemDTO));
         
         List<BidListItemDTO> result = bidService.getAllBids();
         
         assertEquals(1, result.size());
-        assertEquals(new BidListItemDTO(1, account, type, bidQuantity), result.get(0));
+        assertEquals(expectedBidListItemDTO, result.get(0));
         verify(bidRepository).findAll();
     }
 
@@ -139,7 +133,7 @@ class BidServiceTest {
        
         assertThrows(BidNotFoundException.class, () -> bidService.deleteById(nonExistentId));
 
-        verify(bidRepository,never()).delete(any());
+        verify(bidRepository, never()).delete(any());
     }
 
     @Test
