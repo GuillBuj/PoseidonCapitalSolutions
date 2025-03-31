@@ -25,17 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CurvePointService {
     
     private final CurvePointRepository curvePointRepository;
-    private final CurvePointMapper mapper;
+    private final CurvePointMapper curvePointMapper;
     
     public List<CurvePointListItemDTO> getAll() {
-        return mapper.toListItemDtoList(curvePointRepository.findAll());
+        return curvePointMapper.toListItemDtoList(curvePointRepository.findAll());
     }
         
     @Transactional
     public CurvePoint createCurvePoint(CurvePointAddDTO curvePointAddDTO){
         log.debug("Creating curve point from DTO: {}", curvePointAddDTO);
 
-        CurvePoint newCurvePoint = mapper.toEntity(curvePointAddDTO);
+        CurvePoint newCurvePoint = curvePointMapper.toEntity(curvePointAddDTO);
         newCurvePoint.setCreationDate(new Timestamp(System.currentTimeMillis()));
 
         return curvePointRepository.save(newCurvePoint);
@@ -48,7 +48,7 @@ public class CurvePointService {
         CurvePoint curvePoint = curvePointRepository.findById(curvePointUpdateDTO.id())
             .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + curvePointUpdateDTO.id()));
         
-        mapper.updateEntityFromDto(curvePointUpdateDTO, curvePoint);
+        curvePointMapper.updateEntityFromDto(curvePointUpdateDTO, curvePoint);
 
         return curvePointRepository.save(curvePoint);
     }
@@ -70,6 +70,6 @@ public class CurvePointService {
         CurvePoint curvePoint = curvePointRepository.findById(id)
             .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + id));
 
-        return mapper.toDTO(curvePoint);
+        return curvePointMapper.toDTO(curvePoint);
     }
 }

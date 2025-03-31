@@ -24,17 +24,17 @@ import lombok.extern.slf4j.Slf4j;
 public class RatingService {
     
     private final RatingRepository ratingRepository;
-    private final RatingMapper mapper;
+    private final RatingMapper ratingMapper;
 
     public List<RatingListItemDTO> getAll(){
-        return mapper.toListItemDTOList(ratingRepository.findAll());
+        return ratingMapper.toListItemDTOList(ratingRepository.findAll());
     }
         
     @Transactional
     public Rating createRating(RatingAddDTO ratingAddDTO){
         log.debug("Creating rating from DTO: {}", ratingAddDTO);
 
-        return ratingRepository.save(mapper.toEntity(ratingAddDTO));
+        return ratingRepository.save(ratingMapper.toEntity(ratingAddDTO));
     }
 
     
@@ -45,7 +45,7 @@ public class RatingService {
         Rating rating = ratingRepository.findById(ratingUpdateDTO.id())
             .orElseThrow(()-> new RatingNotFoundException("Rating point not found with ID: " + ratingUpdateDTO.id()));
 
-        mapper.updateEntityFromDTO(ratingUpdateDTO, rating);
+        ratingMapper.updateEntityFromDTO(ratingUpdateDTO, rating);
 
         return ratingRepository.save(rating);
     }
@@ -67,6 +67,6 @@ public class RatingService {
         Rating rating = ratingRepository.findById(id)
             .orElseThrow(()-> new RatingNotFoundException("Rating not found with ID: " + id));
 
-        return mapper.toDTO(rating);
+        return ratingMapper.toDTO(rating);
     }
 }

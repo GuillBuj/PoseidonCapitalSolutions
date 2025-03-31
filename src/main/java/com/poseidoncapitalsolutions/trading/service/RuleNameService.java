@@ -25,17 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 public class RuleNameService {
     
     private final RuleNameRepository ruleNameRepository;
-    private final RuleNameMapper mapper;
+    private final RuleNameMapper ruleNameMapper;
     
     public List<RuleNameListItemDTO> getAll(){
-        return mapper.toListItemDTOList(ruleNameRepository.findAll());
+        return ruleNameMapper.toListItemDTOList(ruleNameRepository.findAll());
     }
 
     @Transactional
     public RuleName createRuleName(RuleNameAddDTO ruleNameAddDTO){
         log.debug("Creating rule name from DTO: {}", ruleNameAddDTO);
 
-        return ruleNameRepository.save(mapper.toEntity(ruleNameAddDTO));
+        return ruleNameRepository.save(ruleNameMapper.toEntity(ruleNameAddDTO));
     }
         
        
@@ -46,7 +46,7 @@ public class RuleNameService {
         RuleName ruleName = ruleNameRepository.findById(ruleNameUpdateDTO.id())
             .orElseThrow(()-> new RuleNameNotFoundException("Rule name point not found with ID: " + ruleNameUpdateDTO.id()));
 
-        mapper.updateEntityFromDTO(ruleNameUpdateDTO, ruleName);
+        ruleNameMapper.updateEntityFromDTO(ruleNameUpdateDTO, ruleName);
 
         return ruleNameRepository.save(ruleName);
     }
@@ -68,6 +68,6 @@ public class RuleNameService {
         RuleName ruleName = ruleNameRepository.findById(id)
             .orElseThrow(()-> new RuleNameNotFoundException("Rule name not found with ID: " + id));
 
-        return mapper.toDTO(ruleName);
+        return ruleNameMapper.toDTO(ruleName);
     }
 }

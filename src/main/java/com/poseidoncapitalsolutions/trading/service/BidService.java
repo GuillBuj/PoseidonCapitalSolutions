@@ -24,16 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 public class BidService {
 
     private final BidRepository bidRepository;
-    private final BidMapper mapper;
+    private final BidMapper bidMapper;
 
     public List<BidListItemDTO> getAllBids(){
-        return mapper.toListItemDTOList(bidRepository.findAll());
+        return bidMapper.toListItemDTOList(bidRepository.findAll());
     }
     
     public Bid createBid(BidAddDTO bidAddDTO){
         log.debug("Creating bid from DTO: {}", bidAddDTO);
 
-        Bid newBid = mapper.toEntity(bidAddDTO);
+        Bid newBid = bidMapper.toEntity(bidAddDTO);
         newBid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 
         return bidRepository.save(newBid);
@@ -45,7 +45,7 @@ public class BidService {
         Bid updatedBid = bidRepository.findById(bidUpdateDTO.id())
             .orElseThrow(() -> new BidNotFoundException("Bid not found with ID: " + bidUpdateDTO.id()));
         
-        mapper.updateBidFromDTO(bidUpdateDTO, updatedBid);
+        bidMapper.updateBidFromDTO(bidUpdateDTO, updatedBid);
         
         return bidRepository.save(updatedBid);
     }

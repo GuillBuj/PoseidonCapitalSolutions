@@ -35,13 +35,13 @@ public class UserService {
     
     public User createUser(UserCreateDTO userCreateDTO){
         log.debug("Creating user from DTO: {}", userCreateDTO);
-//TODO verifs existe deja
+
         if(userRepository.existsByUsername(userCreateDTO.username())){
             log.error("Username already exists: {}", userCreateDTO.username());
             throw new UsernameAlreadyExistsException("Username already exists");
         }
         User newUser = userMapper.toEntity(userCreateDTO);
-//TODO fonction
+
         newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
 
         User savedUser = userRepository.save(newUser);

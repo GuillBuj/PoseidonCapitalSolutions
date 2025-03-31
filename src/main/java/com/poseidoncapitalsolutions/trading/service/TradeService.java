@@ -23,17 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 public class TradeService {
     
     private final TradeRepository tradeRepository;
-    private final TradeMapper mapper;
+    private final TradeMapper tradeMapper;
 
     public List<TradeListItemDTO> getAll(){
-        return mapper.toListItemDTOList(tradeRepository.findAll());
+        return tradeMapper.toListItemDTOList(tradeRepository.findAll());
     }
     
     @Transactional
     public Trade createTrade(TradeAddDTO tradeAddDTO){
         log.debug("Creating trade from DTO: {}", tradeAddDTO);
 
-        return tradeRepository.save(mapper.toEntity(tradeAddDTO));
+        return tradeRepository.save(tradeMapper.toEntity(tradeAddDTO));
     }
           
     @Transactional
@@ -43,7 +43,7 @@ public class TradeService {
         Trade trade = tradeRepository.findById(tradeUpdateDTO.id())
             .orElseThrow(() -> new TradeNotFoundException("Trade not found with ID: " + tradeUpdateDTO.id()));
 
-        mapper.updateTradeFromDTO(tradeUpdateDTO, trade);
+        tradeMapper.updateTradeFromDTO(tradeUpdateDTO, trade);
 
         return tradeRepository.save(trade);
     } 
@@ -65,6 +65,6 @@ public class TradeService {
         Trade trade = tradeRepository.findById(id)
             .orElseThrow(() -> new TradeNotFoundException("Trade not found with ID: " + id));
 
-        return mapper.toDTO(trade);
+        return tradeMapper.toDTO(trade);
     }
 }
