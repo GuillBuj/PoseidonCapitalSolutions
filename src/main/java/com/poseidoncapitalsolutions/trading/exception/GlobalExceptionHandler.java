@@ -44,4 +44,10 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/user/list";
     }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public String handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/user/add";
+    }
 }

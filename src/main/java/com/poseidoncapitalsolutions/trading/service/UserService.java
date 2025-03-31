@@ -10,6 +10,7 @@ import com.poseidoncapitalsolutions.trading.dto.UserCreateDTO;
 import com.poseidoncapitalsolutions.trading.dto.UserUpdateDTO;
 import com.poseidoncapitalsolutions.trading.dto.display.UserListItemDTO;
 import com.poseidoncapitalsolutions.trading.exception.UserNotFoundException;
+import com.poseidoncapitalsolutions.trading.exception.UsernameAlreadyExistsException;
 import com.poseidoncapitalsolutions.trading.mapper.UserMapper;
 import com.poseidoncapitalsolutions.trading.model.User;
 import com.poseidoncapitalsolutions.trading.repository.UserRepository;
@@ -35,6 +36,10 @@ public class UserService {
     public User createUser(UserCreateDTO userCreateDTO){
         log.debug("Creating user from DTO: {}", userCreateDTO);
 //TODO verifs existe deja
+        if(userRepository.existsByUsername(userCreateDTO.username())){
+            log.error("Username already exists: {}", userCreateDTO.username());
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
         User newUser = userMapper.toEntity(userCreateDTO);
 //TODO fonction
         newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
