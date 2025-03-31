@@ -14,18 +14,16 @@ import com.poseidoncapitalsolutions.trading.model.Trade;
 import com.poseidoncapitalsolutions.trading.repository.TradeRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Data
 @Transactional
 @Slf4j
 public class TradeService {
     
-    private TradeRepository tradeRepository;
-    private TradeMapper mapper;
+    private final TradeRepository tradeRepository;
+    private final TradeMapper mapper;
 
     public List<TradeListItemDTO> getAll(){
         return mapper.toListItemDTOList(tradeRepository.findAll());

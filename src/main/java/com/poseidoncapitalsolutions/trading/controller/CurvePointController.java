@@ -1,8 +1,5 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,14 +15,16 @@ import com.poseidoncapitalsolutions.trading.model.CurvePoint;
 import com.poseidoncapitalsolutions.trading.service.CurvePointService;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class CurvePointController {
-    @Autowired
-    private CurvePointService curvePointService;
+    
+    private final CurvePointService curvePointService;
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model){

@@ -1,6 +1,5 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,22 +9,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.poseidoncapitalsolutions.trading.dto.CurvePointAddDTO;
 import com.poseidoncapitalsolutions.trading.dto.RatingAddDTO;
 import com.poseidoncapitalsolutions.trading.dto.RatingUpdateDTO;
-import com.poseidoncapitalsolutions.trading.model.CurvePoint;
 import com.poseidoncapitalsolutions.trading.model.Rating;
 import com.poseidoncapitalsolutions.trading.service.RatingService;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class RatingController {
-    @Autowired
-    private RatingService ratingService;
+    
+    private final RatingService ratingService;
 
     @RequestMapping("/rating/list")
     public String home(Model model) {
@@ -45,7 +44,6 @@ public class RatingController {
         return "rating/add";
     }
 
-    //TODO : voir types
     @PostMapping("/rating/validate")
     public String validate(@Valid @ModelAttribute("ratingDTO") RatingAddDTO ratingDTO, BindingResult result, Model model) {
         log.info("POST - /rating/validate : {}", ratingDTO);

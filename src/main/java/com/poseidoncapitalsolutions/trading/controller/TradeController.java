@@ -1,6 +1,5 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,15 +15,16 @@ import com.poseidoncapitalsolutions.trading.model.Trade;
 import com.poseidoncapitalsolutions.trading.service.TradeService;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class TradeController {
     
-    @Autowired
-    private TradeService tradeService;
+    private final TradeService tradeService;
 
     @RequestMapping("/trade/list")
     public String home(Model model) {

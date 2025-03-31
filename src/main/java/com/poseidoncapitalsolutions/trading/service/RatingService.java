@@ -14,13 +14,11 @@ import com.poseidoncapitalsolutions.trading.model.Rating;
 import com.poseidoncapitalsolutions.trading.repository.RatingRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @AllArgsConstructor
-@Data
 @Transactional
 @Slf4j
 public class RatingService {

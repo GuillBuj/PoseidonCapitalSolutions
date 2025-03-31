@@ -1,6 +1,5 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,15 +15,17 @@ import com.poseidoncapitalsolutions.trading.model.RuleName;
 import com.poseidoncapitalsolutions.trading.service.RuleNameService;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class RuleNameController {
     
-    @Autowired
-    private RuleNameService ruleNameService;
+    
+    private final RuleNameService ruleNameService;
 
     @RequestMapping("/ruleName/list")
     public String home(Model model){

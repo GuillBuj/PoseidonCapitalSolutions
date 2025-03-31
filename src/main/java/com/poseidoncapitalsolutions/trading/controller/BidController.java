@@ -1,8 +1,5 @@
 package com.poseidoncapitalsolutions.trading.controller;
 
-import java.security.Principal;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,17 +14,17 @@ import com.poseidoncapitalsolutions.trading.model.Bid;
 import com.poseidoncapitalsolutions.trading.service.BidService;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class BidController {
 
-    @Autowired
-    private BidService bidService; 
-    
+    private final BidService bidService; 
     
     @GetMapping("/bid/list")
     public String home(Model model) {

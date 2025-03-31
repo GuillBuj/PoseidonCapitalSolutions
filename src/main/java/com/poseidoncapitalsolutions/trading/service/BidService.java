@@ -15,12 +15,10 @@ import com.poseidoncapitalsolutions.trading.model.Bid;
 import com.poseidoncapitalsolutions.trading.repository.BidRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Data
 @Transactional
 @Slf4j
 public class BidService {
