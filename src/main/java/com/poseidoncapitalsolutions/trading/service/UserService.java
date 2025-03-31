@@ -63,7 +63,7 @@ public class UserService {
         User updatedUser = userRepository.save(user);
         log.info("User successfully updated with ID[{}]", updatedUser.getId());
         
-        return userRepository.save(updatedUser);
+        return updatedUser;
     }
 
     public void deleteById(int id) {
@@ -84,5 +84,4 @@ public class UserService {
 
         return new UserUpdateDTO(user.getId(), user.getUsername(), "", user.getFullname(), user.getRole());
     }
-
 }
