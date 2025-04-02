@@ -91,7 +91,7 @@ class UserServiceTest {
     }
 
     @Test
-    void createUserShouldThrowWhenUsernameExists() {
+    void createUserUsernameAlreadyExists() {
         UserCreateDTO createDTO = new UserCreateDTO("existinguser", "ValidPass1!", "Existing User", "USER");
         
         when(userRepository.existsByUsername("existinguser")).thenReturn(true);

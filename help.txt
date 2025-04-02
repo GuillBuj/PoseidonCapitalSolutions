@@ -1,0 +1,16 @@
+#connection mysql
+mysql -u root -p  
+
+# executer fichier script:
+mysql> SOURCE C:/Users/gbujon/Desktop/gits/P6-pay-my-buddy/PayMyBuddy/database/initialize_database.sql; //mettre à jour le path
+
+# Accorder privileges
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+# Puis, actualisez les privilèges pour qu'ils soient appliqués :
+FLUSH PRIVILEGES;
+
+# Web server failed to start. Port 8080 was already in use.
+netstat -ano | findstr 8080
+  TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       *<pid>*
+  TCP    [::]:8080              [::]:0                 LISTENING       *<pid>*
+taskkill /F /PID *<pid>*
