@@ -57,7 +57,7 @@ public class TradeController {
         Trade newTrade = tradeService.createTrade(tradeDTO);
 
         log.info("Trade successfully created with ID[{}]", newTrade.getId());
-        return "trade/list";
+        return "redirect:/trade/list";
     }
 
     @GetMapping("/trade/update/{id}")

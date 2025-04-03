@@ -1,7 +1,6 @@
 package poseidoncapitalsolutions.trading.controller;
 
 
-import java.util.Optional;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -79,7 +78,7 @@ public class BidControllerIT {
         List<Bid> bids = bidRepository.findAll();
         assertThat(bids).hasSize(initialCount + 1);
         
-        Bid createdBid = bids.get(bids.size() - 1);
+        Bid createdBid = bids.getLast();
         assertThat(createdBid.getAccount()).isEqualTo("Account3");
         assertThat(createdBid.getType()).isEqualTo("TypeC");
         assertThat(createdBid.getBidQuantity()).isEqualTo(300.0);
@@ -104,7 +103,7 @@ public class BidControllerIT {
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void testShowUpdateFormOk() throws Exception {
-        Bid existingBid = bidRepository.findAll().get(0);
+        Bid existingBid = bidRepository.findAll().getFirst();
 
         mockMvc.perform(get("/bid/update/" + existingBid.getId()))
                .andExpect(status().isOk())
@@ -123,7 +122,7 @@ public class BidControllerIT {
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void testUpdateBidOk() throws Exception {
-        Bid existingBid = bidRepository.findAll().get(0);
+        Bid existingBid = bidRepository.findAll().getFirst();
 
         mockMvc.perform(post("/bid/update/" + existingBid.getId())
                .param("id", Integer.toString(existingBid.getId()))
@@ -142,7 +141,7 @@ public class BidControllerIT {
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void testUpdateBidInvalidData() throws Exception {
-        Bid existingBid = bidRepository.findAll().get(0);
+        Bid existingBid = bidRepository.findAll().getFirst();
         String originalAccount = existingBid.getAccount();
 
         mockMvc.perform(post("/bid/update/" + existingBid.getId())
@@ -162,7 +161,7 @@ public class BidControllerIT {
     @WithMockUser(username = "admin", roles = "ADMIN")
     void testDeleteBidOk() throws Exception {
         int initialCount = bidRepository.findAll().size();
-        Bid bidToDelete = bidRepository.findAll().get(0);
+        Bid bidToDelete = bidRepository.findAll().getFirst();
 
         mockMvc.perform(get("/bid/delete/" + bidToDelete.getId()))
                .andExpect(status().is3xxRedirection())
