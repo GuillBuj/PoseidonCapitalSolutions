@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -34,6 +35,9 @@ public class UserControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void testGetAllUsers() throws Exception {
@@ -45,6 +49,13 @@ public class UserControllerIT {
         assertThat(userRepository.findAll())
                 .extracting(User::getUsername)
                 .containsExactly("user", "admin");
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = "USER")
+    void testGetAllUsersNotAdmin() throws Exception {
+        mockMvc.perform(get("/user/list"))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -72,6 +83,9 @@ public class UserControllerIT {
         List<User> users = userRepository.findAll();
         assertThat(users).hasSize(initialCount + 1);
         assertThat(users.getLast().getUsername()).isEqualTo("newuser");
+        assertThat(users.getLast().getFullname()).isEqualTo("New User");
+        assertThat(passwordEncoder.matches("ValidPass123!", users.getLast().getPassword())).isTrue();
+        assertThat(users.getLast().getRole()).isEqualTo("USER");
     }
 
     @Test
@@ -116,6 +130,29 @@ public class UserControllerIT {
         mockMvc.perform(get("/user/update/999"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/list"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void testUpdateUserOk() throws Exception {
+        int initialCount = userRepository.findAll().size();
+        int id = userRepository.findAll().getFirst().getId();
+
+        mockMvc.perform(post("/user/update")
+                        .param("id", String.valueOf(id))
+                        .param("username", "updateduser")
+                        .param("rawPassword", "ValidPass123!")
+                        .param("fullname", "Updated User")
+                        .param("role", "USER"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/user/list"));
+
+        assertThat(userRepository.findAll()).hasSize(initialCount);
+        User updatedUser = userRepository.findAll().getFirst();
+        assertThat(updatedUser.getUsername()).isEqualTo("updateduser");
+        assertThat(updatedUser.getFullname()).isEqualTo("Updated User");
+        assertThat(passwordEncoder.matches("ValidPass123!", updatedUser.getPassword())).isTrue();
+        assertThat(updatedUser.getRole()).isEqualTo("USER");
     }
 
     @Test

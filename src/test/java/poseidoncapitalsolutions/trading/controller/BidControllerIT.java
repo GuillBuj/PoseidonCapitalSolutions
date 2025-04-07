@@ -42,7 +42,7 @@ public class BidControllerIT {
     private BidRepository bidRepository;
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllBids() throws Exception {
         mockMvc.perform(get("/bid/list"))
                .andExpect(status().isOk())
@@ -55,7 +55,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowAddForm() throws Exception {
         mockMvc.perform(get("/bid/add"))
                .andExpect(status().isOk())
@@ -64,7 +64,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateBidOk() throws Exception {
         int initialCount = bidRepository.findAll().size();
 
@@ -85,7 +85,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateBidInvalidData() throws Exception {
         int initialCount = bidRepository.findAll().size();
 
@@ -101,7 +101,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormOk() throws Exception {
         Bid existingBid = bidRepository.findAll().getFirst();
 
@@ -112,7 +112,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormNonExistingId() throws Exception {
         mockMvc.perform(get("/bid/update/999"))
             .andExpect(status().is3xxRedirection())
@@ -120,7 +120,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateBidOk() throws Exception {
         Bid existingBid = bidRepository.findAll().getFirst();
 
@@ -139,7 +139,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateBidInvalidData() throws Exception {
         Bid existingBid = bidRepository.findAll().getFirst();
         String originalAccount = existingBid.getAccount();
@@ -158,7 +158,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteBidOk() throws Exception {
         int initialCount = bidRepository.findAll().size();
         Bid bidToDelete = bidRepository.findAll().getFirst();
@@ -172,7 +172,7 @@ public class BidControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteBidNonExistingId() throws Exception {
         mockMvc.perform(get("/bid/delete/999"))
                .andExpect(status().is3xxRedirection())
