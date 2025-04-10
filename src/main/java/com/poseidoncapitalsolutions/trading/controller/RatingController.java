@@ -19,36 +19,44 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
+/**
+ * Controller handling Rating-related requests.
+ */
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class RatingController {
-    
+
     private final RatingService ratingService;
 
-    @RequestMapping("/rating/list")
+    /**
+     * Displays the list of ratings.
+     */
+    @GetMapping("/rating/list")
     public String home(Model model) {
         log.debug("GET - /rating/list");
-
         model.addAttribute("ratings", ratingService.getAll());
-
         return "rating/list";
     }
 
+    /**
+     * Shows the form to add a new rating.
+     */
     @GetMapping("/rating/add")
     public String addRatingForm(Model model) {
         log.debug("GET - /rating/add");
-
         model.addAttribute("ratingDTO", new RatingAddDTO(null, null, null, null));
-        
         return "rating/add";
     }
 
+    /**
+     * Validates and creates a new rating.
+     */
     @PostMapping("/rating/validate")
     public String validate(@Valid @ModelAttribute("ratingDTO") RatingAddDTO ratingDTO, BindingResult result, Model model) {
         log.info("POST - /rating/validate : {}", ratingDTO);
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             log.warn("Validation error");
             model.addAttribute("ratingDTO", ratingDTO);
             return "rating/add";
@@ -60,37 +68,41 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
+    /**
+     * Shows the form to update an existing rating.
+     */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        log.debug("GET - /rating/update");
-
         model.addAttribute("ratingDTO", ratingService.getRatingUpdateDTO(id));
-        
         return "rating/update";
     }
 
+    /**
+     * Updates an existing rating.
+     */
     @PostMapping("/rating/update/{id}")
     public String updateRating(@Valid @ModelAttribute("ratingDTO") RatingUpdateDTO ratingDTO, BindingResult result, Model model) {
-        log.info("POST - /rating/update/{}", ratingDTO.id());
+        log.info("POST - /rating/update/{id} : {}", ratingDTO.id());
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             log.warn("Validation error");
             model.addAttribute("ratingDTO", ratingDTO);
-            return "rating/update";
+            return "rating/add";
         }
 
         Rating updatedRating = ratingService.updateRating(ratingDTO);
         log.info("Rating successfully updated with ID[{}]", updatedRating.getId());
-
         return "redirect:/rating/list";
     }
 
+    /**
+     * Deletes a rating by ID.
+     */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
         log.info("GET - /rating/delete/{}", id);
-
         ratingService.deleteById(id);
-
         return "redirect:/rating/list";
     }
 }
+

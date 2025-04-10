@@ -16,10 +16,15 @@ import com.poseidoncapitalsolutions.trading.model.User;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
     User toEntity(UserCreateDTO dto);
    
+    @Mapping(target = "rawPassword", ignore = true)
     UserUpdateDTO toDTO(User entity);
 
+    @Mapping(target = "authorities", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "password", ignore = true)
     void updateUserFromDTO(UserUpdateDTO dto, @MappingTarget User entity);

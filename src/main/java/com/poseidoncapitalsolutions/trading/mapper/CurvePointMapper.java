@@ -16,10 +16,15 @@ import com.poseidoncapitalsolutions.trading.model.CurvePoint;
 @Mapper(componentModel = "spring")
 public interface CurvePointMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "asOfDate", ignore = true)
     CurvePoint toEntity(CurvePointAddDTO dto);
 
     CurvePointUpdateDTO toDTO(CurvePoint entity);
 
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "asOfDate", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDto(CurvePointUpdateDTO dto, @MappingTarget CurvePoint entity);
     

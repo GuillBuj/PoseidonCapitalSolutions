@@ -19,22 +19,31 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
+/**
+ * Controller handling Trade-related requests.
+ */
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class TradeController {
-    
+
     private final TradeService tradeService;
 
+    /**
+     * Displays the list of trades.
+     */
     @RequestMapping("/trade/list")
     public String home(Model model) {
         log.debug("GET - /trade/list");
-        
+
         model.addAttribute("trades", tradeService.getAllTrades());
 
         return "trade/list";
     }
 
+    /**
+     * Shows the form to add a new trade.
+     */
     @GetMapping("/trade/add")
     public String addTrade(Model model) {
         log.debug("GET - /trade/add");
@@ -44,6 +53,9 @@ public class TradeController {
         return "trade/add";
     }
 
+    /**
+     * Validates and creates a new trade.
+     */
     @PostMapping("/trade/validate")
     public String validate(@Valid @ModelAttribute("tradeDTO")TradeAddDTO tradeDTO, BindingResult result, Model model) {
         log.info("POST - /trade/validate : {}", tradeDTO);
@@ -51,7 +63,7 @@ public class TradeController {
         if (result.hasErrors()) {
             log.warn("Validation error");
             model.addAttribute("tradeDTO", tradeDTO);
-            return "trade/add";           
+            return "trade/add";
         }
 
         Trade newTrade = tradeService.createTrade(tradeDTO);
@@ -60,6 +72,9 @@ public class TradeController {
         return "redirect:/trade/list";
     }
 
+    /**
+     * Shows the form to update an existing trade.
+     */
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         log.debug("GET - /trade/update/{}", id);
@@ -69,15 +84,18 @@ public class TradeController {
         return "trade/update";
     }
 
+    /**
+     * Updates an existing trade.
+     */
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid @ModelAttribute("tradeDTO")TradeUpdateDTO tradeDTO,
-                             BindingResult result, Model model) {
+                              BindingResult result, Model model) {
         log.info("POST - /trade/update/{} : {}", tradeDTO.id());
-        
+
         if (result.hasErrors()) {
             log.warn("Validation error");
             model.addAttribute("tradeDTO", tradeDTO);
-            return "trade/update";           
+            return "trade/update";
         }
 
         Trade updatedTrade = tradeService.updateTrade(tradeDTO);
@@ -86,13 +104,15 @@ public class TradeController {
         return "redirect:/trade/list";
     }
 
+    /**
+     * Deletes a trade by ID.
+     */
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         log.info("POST - /trade/delete/{} : {}", id);
-        
-        tradeService.deleteById(id);
-        
-        return "redirect:/trade/list";
-    }  
 
+        tradeService.deleteById(id);
+
+        return "redirect:/trade/list";
+    }
 }

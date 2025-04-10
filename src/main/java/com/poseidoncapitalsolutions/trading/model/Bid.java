@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class Bid {
 
     private String account;
     private String type;
-    private Double bidQuantity;
+    @Positive private Double bidQuantity;
     private Double askQuantity;
     private Double bid;
     private Double ask;

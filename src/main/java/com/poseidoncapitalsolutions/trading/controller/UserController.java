@@ -17,35 +17,47 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Controller handling User-related requests.
+ */
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class UserController {
-    
+
     private final UserService userService;
 
+    /**
+     * Displays the list of users.
+     */
     @RequestMapping("/user/list")
     public String home(Model model) {
         log.debug("GET - /user/list");
-        
+
         model.addAttribute("users", userService.getAllUsers());
-        
+
         return "user/list";
     }
 
+    /**
+     * Shows the form to add a new user.
+     */
     @GetMapping("/user/add")
     public String addUser(Model model) {
         log.debug("GET - /user/add");
-        
+
         model.addAttribute("userDTO", new UserCreateDTO("", "", "", "USER"));
 
         return "user/add";
     }
 
+    /**
+     * Validates and creates a new user.
+     */
     @PostMapping("/user/validate")
     public String validate(@Valid @ModelAttribute("userDTO") UserCreateDTO userDTO, BindingResult result, Model model) {
         log.info("POST - /user/validate : {}", userDTO);
-        
+
         if (result.hasErrors()) {
             model.addAttribute("userDTO", userDTO);
             return "user/add";
@@ -56,15 +68,21 @@ public class UserController {
         return "redirect:/user/list";
     }
 
+    /**
+     * Shows the form to update an existing user.
+     */
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         log.debug("GET - /user/update/{}", id);
-        
+
         model.addAttribute("userDTO", userService.getUserUpdateDTO(id));
 
         return "user/update";
     }
 
+    /**
+     * Updates an existing user.
+     */
     @PostMapping("/user/update")
     public String updateUser(@Valid @ModelAttribute("userDTO") UserUpdateDTO userDTO, BindingResult result, Model model) {
         log.info("POST - /user/update : {}", userDTO);
@@ -79,10 +97,13 @@ public class UserController {
         return "redirect:/user/list";
     }
 
+    /**
+     * Deletes a user by ID.
+     */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         log.info("GET - /user/delete/{}", id);
-        
+
         userService.deleteById(id);
 
         return "redirect:/user/list";

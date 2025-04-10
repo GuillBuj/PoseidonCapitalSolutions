@@ -18,6 +18,9 @@ import com.poseidoncapitalsolutions.trading.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service for managing users.
+ */
 @Service
 @AllArgsConstructor
 @Transactional
@@ -26,62 +29,80 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
     private final PasswordEncoder passwordEncoder;
 
-    public List<UserListItemDTO> getAllUsers(){
+    /**
+     * Retrieves all users.
+     *
+     * @return list of UserListItemDTO
+     */
+    public List<UserListItemDTO> getAllUsers() {
         return userMapper.toListItemDTOList(userRepository.findAll());
     }
-    
-    public User createUser(UserCreateDTO userCreateDTO){
-        log.debug("Creating user from DTO: {}", userCreateDTO);
 
-        if(userRepository.existsByUsername(userCreateDTO.username())){
+    /**
+     * Creates a new user.
+     *
+     * @param userCreateDTO user creation data
+     * @return created User entity
+     * @throws UsernameAlreadyExistsException if username already taken
+     */
+    public User createUser(UserCreateDTO userCreateDTO) {
+        log.debug("Creating user from DTO: {}", userCreateDTO);
+        if (userRepository.existsByUsername(userCreateDTO.username())) {
             log.error("Username already exists: {}", userCreateDTO.username());
             throw new UsernameAlreadyExistsException("Username already exists");
         }
         User newUser = userMapper.toEntity(userCreateDTO);
-
         newUser.setPassword(passwordEncoder.encode(userCreateDTO.rawPassword()));
-
         User savedUser = userRepository.save(newUser);
         log.info("User successfully created with ID[{}]", savedUser.getId());
-        
         return savedUser;
     }
 
-    public User updateUser(UserUpdateDTO userUpdateDTO){
+    /**
+     * Updates an existing user.
+     *
+     * @param userUpdateDTO updated user data
+     * @return updated User entity
+     * @throws UserNotFoundException if user not found
+     */
+    public User updateUser(UserUpdateDTO userUpdateDTO) {
         log.debug("Updating user from DTO: {}", userUpdateDTO);
-
         User user = userRepository.findById(userUpdateDTO.id())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-                userMapper.updateUserFromDTO(userUpdateDTO, user);
-
+        userMapper.updateUserFromDTO(userUpdateDTO, user);
         user.setPassword(passwordEncoder.encode(userUpdateDTO.rawPassword()));
-        
         User updatedUser = userRepository.save(user);
         log.info("User successfully updated with ID[{}]", updatedUser.getId());
-        
         return updatedUser;
     }
 
+    /**
+     * Deletes a user by ID.
+     *
+     * @param id the user ID
+     * @throws UserNotFoundException if not found
+     */
     public void deleteById(int id) {
         log.debug("Deleting user with id: {}", id);
-    
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
-    
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
         userRepository.delete(user);
         log.info("User successfully deleted with id: {}", id);
     }
 
-    public UserUpdateDTO getUserUpdateDTO(int id){
+    /**
+     * Retrieves a DTO for updating a user.
+     *
+     * @param id the user ID
+     * @return UserUpdateDTO
+     * @throws UserNotFoundException if not found
+     */
+    public UserUpdateDTO getUserUpdateDTO(int id) {
         log.debug("Creating UserUpdateDTO for ID: {}", id);
-        
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
-
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
         return new UserUpdateDTO(user.getId(), user.getUsername(), "", user.getFullname(), user.getRole());
     }
 }

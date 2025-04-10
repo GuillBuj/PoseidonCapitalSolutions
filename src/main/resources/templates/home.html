@@ -14,14 +14,28 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
     </style>
+    </style>
 </head>
 <body class="bg-light">
     <div class="container py-5">
         <div class="row mb-5">
-            <div class="col-12 text-center">
+            <div class="col-10 text-center mt-4">
                 <h1 class="display-4 fw-bold text-primary">Poseidon Capital Solutions</h1>
             </div>
+            <div class="col-2 text-right">
+                <div class="card border-secondary" style="width: 200px;">
+                    <div class="card-body text-center py-3">
+                        <h6 class="card-title text-secondary">Logged in as:</h6>
+                        <p class="card-text text-dark mb-2"><b th:inline="text" class="user" th:text="${#authentication.principal.username}"></b></p>
+                        <form th:action="@{/logout}" method="POST">
+                            <input type="submit" value="Logout" class="btn btn-danger btn-sm w-100"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
         </div>
+
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             <div class="col">

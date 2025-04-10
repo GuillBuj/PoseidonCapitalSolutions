@@ -18,58 +18,80 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
+/**
+ * Service for managing curve points.
+ */
 @Service
 @AllArgsConstructor
 @Transactional
 @Slf4j
 public class CurvePointService {
-    
+
     private final CurvePointRepository curvePointRepository;
     private final CurvePointMapper curvePointMapper;
-    
+
+    /**
+     * Retrieves all curve points as DTOs.
+     *
+     * @return a list of CurvePointListItemDTO
+     */
     public List<CurvePointListItemDTO> getAll() {
         return curvePointMapper.toListItemDtoList(curvePointRepository.findAll());
     }
-        
-    @Transactional
-    public CurvePoint createCurvePoint(CurvePointAddDTO curvePointAddDTO){
-        log.debug("Creating curve point from DTO: {}", curvePointAddDTO);
 
+    /**
+     * Creates a new curve point from a DTO.
+     *
+     * @param curvePointAddDTO the DTO with curve point data
+     * @return the created CurvePoint entity
+     */
+    public CurvePoint createCurvePoint(CurvePointAddDTO curvePointAddDTO) {
+        log.debug("Creating curve point from DTO: {}", curvePointAddDTO);
         CurvePoint newCurvePoint = curvePointMapper.toEntity(curvePointAddDTO);
         newCurvePoint.setCreationDate(new Timestamp(System.currentTimeMillis()));
-
         return curvePointRepository.save(newCurvePoint);
     }
-    
-    @Transactional
-    public CurvePoint updateCurvePoint(CurvePointUpdateDTO curvePointUpdateDTO){
-        log.debug("Updating curve point from DTO: {}", curvePointUpdateDTO);
-        
-        CurvePoint curvePoint = curvePointRepository.findById(curvePointUpdateDTO.id())
-            .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + curvePointUpdateDTO.id()));
-        
-        curvePointMapper.updateEntityFromDto(curvePointUpdateDTO, curvePoint);
 
-        return curvePointRepository.save(curvePoint);
+    /**
+     * Updates a curve point.
+     *
+     * @param curvePointUpdateDTO the DTO with updated data
+     * @return the updated CurvePoint entity
+     * @throws CurvePointNotFoundException if not found
+     */
+    public CurvePoint updateCurvePoint(CurvePointUpdateDTO curvePointUpdateDTO) {
+        log.debug("Updating curve point from DTO: {}", curvePointUpdateDTO);
+        CurvePoint updatedCurvePoint = curvePointRepository.findById(curvePointUpdateDTO.id())
+                .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + curvePointUpdateDTO.id()));
+        curvePointMapper.updateEntityFromDto(curvePointUpdateDTO, updatedCurvePoint);
+        updatedCurvePoint.setAsOfDate(new Timestamp(System.currentTimeMillis()));
+        return curvePointRepository.save(updatedCurvePoint);
     }
 
-    @Transactional
+    /**
+     * Deletes a curve point by ID.
+     *
+     * @param id the curve point ID
+     * @throws CurvePointNotFoundException if not found
+     */
     public void deleteById(int id) {
         log.debug("Deleting curve point with id: {}", id);
-    
         CurvePoint curvePoint = curvePointRepository.findById(id)
-            .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + id));
-        
+                .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + id));
         curvePointRepository.delete(curvePoint);
         log.info("Curve point successfully deleted with id: {}", id);
     }
-    
-    @Transactional(readOnly = true)
-    public CurvePointUpdateDTO getCurvePointUpdateDTO(int id){
-        
-        CurvePoint curvePoint = curvePointRepository.findById(id)
-            .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + id));
 
+    /**
+     * Retrieves a DTO for updating a curve point.
+     *
+     * @param id the curve point ID
+     * @return CurvePointUpdateDTO
+     * @throws CurvePointNotFoundException if not found
+     */
+    public CurvePointUpdateDTO getCurvePointUpdateDTO(int id) {
+        CurvePoint curvePoint = curvePointRepository.findById(id)
+                .orElseThrow(() -> new CurvePointNotFoundException("Curve point not found with ID: " + id));
         return curvePointMapper.toDTO(curvePoint);
     }
 }
