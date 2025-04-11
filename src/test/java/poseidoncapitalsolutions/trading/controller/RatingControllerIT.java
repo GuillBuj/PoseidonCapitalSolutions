@@ -1,10 +1,9 @@
 package poseidoncapitalsolutions.trading.controller;
 
-import com.poseidoncapitalsolutions.trading.TradingApplication;
+import java.util.List;
 
-import com.poseidoncapitalsolutions.trading.model.Rating;
-import com.poseidoncapitalsolutions.trading.repository.RatingRepository;
-import jakarta.transaction.Transactional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,18 +12,18 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import com.poseidoncapitalsolutions.trading.TradingApplication;
+import com.poseidoncapitalsolutions.trading.model.Rating;
+import com.poseidoncapitalsolutions.trading.repository.RatingRepository;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest(classes = TradingApplication.class)
 @AutoConfigureMockMvc
@@ -40,7 +39,7 @@ public class RatingControllerIT {
     private RatingRepository ratingRepository;
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllRatings() throws Exception {
         mockMvc.perform(get("/rating/list"))
                 .andExpect(status().isOk())
@@ -53,7 +52,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowAddForm() throws Exception {
         mockMvc.perform(get("/rating/add"))
                 .andExpect(status().isOk())
@@ -62,7 +61,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateRatingOk() throws Exception {
         int initialCount = ratingRepository.findAll().size();
 
@@ -85,7 +84,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormOk() throws Exception {
         Rating existingRating = ratingRepository.findAll().getFirst();
 
@@ -96,7 +95,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormNonExistingId() throws Exception {
         mockMvc.perform(get("/rating/update/999"))
                 .andExpect(status().is3xxRedirection())
@@ -104,7 +103,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateRatingOk() throws Exception {
         Rating existingRating = ratingRepository.findAll().getFirst();
 
@@ -125,7 +124,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteRatingOk() throws Exception {
         int initialCount = ratingRepository.findAll().size();
         Rating ratingToDelete = ratingRepository.findAll().getFirst();
@@ -139,7 +138,7 @@ public class RatingControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteRatingNonExistingId() throws Exception {
         mockMvc.perform(get("/rating/delete/999"))
                 .andExpect(status().is3xxRedirection())

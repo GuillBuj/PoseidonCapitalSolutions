@@ -1,9 +1,9 @@
 package poseidoncapitalsolutions.trading.controller;
 
-import com.poseidoncapitalsolutions.trading.TradingApplication;
-import com.poseidoncapitalsolutions.trading.model.CurvePoint;
-import com.poseidoncapitalsolutions.trading.repository.CurvePointRepository;
-import jakarta.transaction.Transactional;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,18 +12,18 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import com.poseidoncapitalsolutions.trading.TradingApplication;
+import com.poseidoncapitalsolutions.trading.model.CurvePoint;
+import com.poseidoncapitalsolutions.trading.repository.CurvePointRepository;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest(classes = TradingApplication.class)
 @AutoConfigureMockMvc
@@ -39,7 +39,7 @@ public class CurvePointControllerIT {
     private CurvePointRepository curvePointRepository;
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllCurvePoints() throws Exception {
         mockMvc.perform(get("/curvePoint/list"))
                 .andExpect(status().isOk())
@@ -52,7 +52,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowAddForm() throws Exception {
         mockMvc.perform(get("/curvePoint/add"))
                 .andExpect(status().isOk())
@@ -61,7 +61,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateCurvePointOk() throws Exception {
         int initialCount = curvePointRepository.findAll().size();
 
@@ -82,7 +82,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateCurvePointInvalidData() throws Exception {
         int initialCount = curvePointRepository.findAll().size();
 
@@ -98,7 +98,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormOk() throws Exception {
         CurvePoint existingCurvePoint = curvePointRepository.findAll().getFirst();
 
@@ -109,7 +109,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormNonExistingId() throws Exception {
         mockMvc.perform(get("/curvePoint/update/999"))
                 .andExpect(status().is3xxRedirection())
@@ -117,7 +117,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateCurvePointOk() throws Exception {
         CurvePoint existingCurvePoint = curvePointRepository.findAll().getFirst();
 
@@ -136,7 +136,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateCurvePointInvalidData() throws Exception {
         CurvePoint existingCurvePoint = curvePointRepository.findAll().getFirst();
         int originalCurveId = existingCurvePoint.getCurveId();
@@ -155,7 +155,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteCurvePointOk() throws Exception {
         int initialCount = curvePointRepository.findAll().size();
         CurvePoint curvePointToDelete = curvePointRepository.findAll().getFirst();
@@ -169,7 +169,7 @@ public class CurvePointControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteCurvePointNonExistingId() throws Exception {
         mockMvc.perform(get("/curvePoint/delete/999"))
                 .andExpect(status().is3xxRedirection())

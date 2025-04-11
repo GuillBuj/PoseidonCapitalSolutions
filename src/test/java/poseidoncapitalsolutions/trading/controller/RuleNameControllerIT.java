@@ -1,10 +1,9 @@
 package poseidoncapitalsolutions.trading.controller;
 
-import com.poseidoncapitalsolutions.trading.TradingApplication;
-import com.poseidoncapitalsolutions.trading.model.RuleName;
-import com.poseidoncapitalsolutions.trading.repository.RuleNameRepository;
+import java.util.List;
 
-import jakarta.transaction.Transactional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,14 +12,18 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import com.poseidoncapitalsolutions.trading.TradingApplication;
+import com.poseidoncapitalsolutions.trading.model.RuleName;
+import com.poseidoncapitalsolutions.trading.repository.RuleNameRepository;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest(classes = TradingApplication.class)
 @AutoConfigureMockMvc
@@ -36,7 +39,7 @@ public class RuleNameControllerIT {
     private RuleNameRepository ruleNameRepository;
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllRuleNames() throws Exception {
         mockMvc.perform(get("/ruleName/list"))
                 .andExpect(status().isOk())
@@ -49,7 +52,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowAddForm() throws Exception {
         mockMvc.perform(get("/ruleName/add"))
                 .andExpect(status().isOk())
@@ -58,7 +61,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateRuleNameOk() throws Exception {
         int initialCount = ruleNameRepository.findAll().size();
 
@@ -82,7 +85,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormOk() throws Exception {
         RuleName existingRule = ruleNameRepository.findAll().getFirst();
 
@@ -93,7 +96,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormNonExistingId() throws Exception {
         mockMvc.perform(get("/ruleName/update/999"))
                 .andExpect(status().is3xxRedirection())
@@ -101,7 +104,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateRuleNameOk() throws Exception {
         RuleName existingRule = ruleNameRepository.findAll().getFirst();
 
@@ -122,7 +125,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteRuleNameOk() throws Exception {
         int initialCount = ruleNameRepository.findAll().size();
         RuleName ruleToDelete = ruleNameRepository.findAll().getFirst();
@@ -136,7 +139,7 @@ public class RuleNameControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteRuleNameNonExistingId() throws Exception {
         mockMvc.perform(get("/ruleName/delete/999"))
                 .andExpect(status().is3xxRedirection())

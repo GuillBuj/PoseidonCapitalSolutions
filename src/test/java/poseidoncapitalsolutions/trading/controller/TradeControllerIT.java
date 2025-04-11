@@ -36,7 +36,7 @@ public class TradeControllerIT {
     private TradeRepository tradeRepository;
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllTrades() throws Exception {
         mockMvc.perform(get("/trade/list"))
                 .andExpect(status().isOk())
@@ -49,7 +49,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowAddForm() throws Exception {
         mockMvc.perform(get("/trade/add"))
                 .andExpect(status().isOk())
@@ -58,7 +58,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testValidateTradeOk() throws Exception {
         int initialCount = tradeRepository.findAll().size();
 
@@ -79,7 +79,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormOk() throws Exception {
         Trade existingTrade = tradeRepository.findAll().getFirst();
 
@@ -90,7 +90,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testShowUpdateFormNonExistingId() throws Exception {
         mockMvc.perform(get("/trade/update/999"))
                 .andExpect(status().is3xxRedirection())
@@ -98,7 +98,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateTradeOk() throws Exception {
         Trade existingTrade = tradeRepository.findAll().getFirst();
 
@@ -117,7 +117,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteTradeOk() throws Exception {
         int initialCount = tradeRepository.findAll().size();
         Trade tradeToDelete = tradeRepository.findAll().getFirst();
@@ -131,7 +131,7 @@ public class TradeControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteTradeNonExistingId() throws Exception {
         mockMvc.perform(get("/trade/delete/999"))
                 .andExpect(status().is3xxRedirection())
